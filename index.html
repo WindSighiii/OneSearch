@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneSearch-V2: Latent Reasoning Enhanced Self-distillation Generative Search</title>
+  <link rel="stylesheet" href="static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ══════════════════════ NAVBAR ══════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <span class="logo-icon">🔍</span>
+      <span class="logo-text">OneSearch-V2</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#experiments">Results</a></li>
+      <li><a href="#bibtex">BibTeX</a></li>
+      <li><a href="https://github.com/benchen4395/onesearch-family" target="_blank" class="nav-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        Code
+      </a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container hero-content">
+    <div class="badge-row">
+      <span class="badge badge-venue">Kuaishou Technology</span>
+      <span class="badge badge-industry">OneSearch Team</span>
+      <span class="badge badge-new">✨ New</span>
+    </div>
+    <h1 class="hero-title">
+      OneSearch-V2: The Latent Reasoning Enhanced<br />
+      <span class="gradient-text">Self-distillation Generative Search</span> Framework
+    </h1>
+    <p class="hero-affiliation">
+      <strong>Kuaishou Technology, Beijing, China</strong>
+    </p>
+    <p class="hero-authors">
+      Ben Chen<sup>*†</sup>, Siyuan Wang<sup>*</sup>, Yufei Ma<sup>*</sup>, Zihan Liang<sup>*</sup>,
+      Xuxin Zhang, Yue Lv, Ying Yang, Huangyu Dai, Lingtao Mao, Tong Zhao,
+      Zhipeng Qian, Xinyu Sun, Zhixin Zhai, Yang Zhao, Bochao Liu,
+      Jingshan Lv, Xiao Liang, Hui Kong, Jing Chen, Han Li,
+      Chenyi Lei<sup>†</sup>, Wenwu Ou, Kun Gai
+    </p>
+    <p class="hero-note">
+      <sup>*</sup> Equal Contribution &nbsp;&nbsp; <sup>†</sup> Corresponding Author
+    </p>
+    <div class="hero-buttons">
+      <div class="hero-author-link">
+        <a href="https://benchen4395.github.io/" target="_blank" class="btn btn-author">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Author Homepage
+        </a>
+      </div>
+      <div class="hero-paper-links">
+        <a href="https://arxiv.org/abs/2603.24422" target="_blank" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+          Paper
+        </a>
+        <a href="https://github.com/benchen4395/onesearch-family" target="_blank" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub Code
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-value">+3.98%</div>
+        <div class="stat-label">Item CTR</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-value">+2.11%</div>
+        <div class="stat-label">Order Volume</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-value">+3.45%</div>
+        <div class="stat-label">GMV</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ABSTRACT ══════════════════════ -->
+<section class="section" id="abstract">
+  <div class="container">
+    <h2 class="section-title">📖 Abstract</h2>
+    <div class="abstract-card">
+      <p>
+        Generative Retrieval (GR) has emerged as a promising paradigm for modern search systems.
+        Compared to multi-stage cascaded architecture, it offers advantages such as <strong>end-to-end joint optimization</strong>
+        and <strong>high computational efficiency</strong>. OneSearch, as a representative industrial-scale deployed generative
+        search framework, has brought significant commercial and operational benefits. However, its inadequate understanding
+        of complex queries, inefficient exploitation of latent user intents, and overfitting to narrow historical preferences
+        have limited its further performance improvement.
+      </p>
+      <p>
+        To address these challenges, we propose <strong>OneSearch-V2</strong>, a <em>latent reasoning enhanced
+        self-distillation generative search framework</em>. It contains three key innovations:
+      </p>
+      <div class="abstract-innovations">
+        <div class="innovation-item">
+          <span class="innovation-num">①</span>
+          <div>
+            <strong>Thought-Augmented Complex Query Understanding</strong> — enables deep query understanding
+            and overcomes the shallow semantic matching limitations of direct inference
+          </div>
+        </div>
+        <div class="innovation-item">
+          <span class="innovation-num">②</span>
+          <div>
+            <strong>Reasoning-Internalized Self-Distillation Training</strong> — uncovers users' potential
+            e-commerce intentions beyond log-fitting through implicit in-context learning
+          </div>
+        </div>
+        <div class="innovation-item">
+          <span class="innovation-num">③</span>
+          <div>
+            <strong>Behavior Preference Alignment Optimization</strong> — mitigates reward hacking from
+            single conversion metrics and addresses personal preference via direct user feedback
+          </div>
+        </div>
+      </div>
+      <p>
+        Extensive offline evaluations demonstrate OneSearch-V2's strong query recognition and user profiling
+        capabilities. Online A/B tests further validate its business effectiveness with
+        <strong>+3.98% item CTR</strong>, <strong>+3.05% buyer conversion rate</strong>, and <strong>+2.11% order volume</strong>,
+        without incurring additional inference costs or serving latency.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ V1 vs V2 Comparison ══════════════════════ -->
+<section class="section section-alt" id="overview">
+  <div class="container">
+    <h2 class="section-title">🔄 OneSearch-V1 vs. V2</h2>
+    <p class="section-subtitle">
+      OneSearch-V2 extends the generative search framework with thought-augmented query understanding,
+      reasoning-internalized self-distillation, and behavior feedback preference alignment.
+    </p>
+    <div class="figure-card">
+      <div class="figure-inner">
+        <img src="static/images/comparison.pdf.png" alt="OneSearch V1 vs V2 Comparison" class="figure-img" />
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 1:</strong> OneSearch-V2 vs. V1. OneSearch-V2 extends the generative search framework
+        with three key innovations: thought-augmented query understanding, reasoning-internalized self-distillation,
+        and behavior feedback preference alignment.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ KEY CHALLENGES ══════════════════════ -->
+<section class="section" id="challenges">
+  <div class="container">
+    <h2 class="section-title">⚠️ Limitations of OneSearch-V1</h2>
+    <p class="section-subtitle">We identify three key limitations that constrain performance of OneSearch</p>
+    <div class="cards-grid three-cols">
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+          🧩
+        </div>
+        <h3>Complex Query Understanding</h3>
+        <p>Typical search queries often lack concrete item targets. Long-tail queries with lexical disparity from target items
+           (negation-type: "relieve fatigue, no supplements"; question-type: "what swimming essentials?")
+           demand deeper semantic reasoning that V1 lacks in single-pass inference.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+          👤
+        </div>
+        <h3>Personalized Intent Reasoning</h3>
+        <p>OneSearch's periodic updates rely on historical co-occurrence patterns and log-fitting, inevitably
+           resulting in shallow matching that fails to uncover true user intent. LLM's explicit chain-of-thought
+           reasoning cannot be deployed due to prohibitive latency.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+          🎯
+        </div>
+        <h3>Fragile Reward System</h3>
+        <p>The reward model, primarily trained on historical behavior logs, is susceptible to sampling bias and
+           reward hacking, causing OneSearch to overfit narrow historical preferences and reinforce long-tail
+           distributional bias in the search system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ METHOD OVERVIEW ══════════════════════ -->
+<section class="section section-alt" id="method">
+  <div class="container">
+    <h2 class="section-title">⚙️ Method Overview</h2>
+    <p class="section-subtitle">
+      The overall framework of OneSearch-V2, containing three key innovations
+    </p>
+    <div class="figure-card">
+      <div class="figure-inner">
+        <img src="static/images/method.jpg" alt="OneSearch V2 Framework Overview" class="figure-img" />
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 2:</strong> The Overall Framework of OneSearch V2. It contains (a) a thought-augmented complex query
+        understanding module, (b) a reasoning-internalized self-distillation training pipeline, and (c) a behavior preference
+        alignment optimization system. OneSearch-V2 effectively mitigates common search system issues such as information
+        bubbles and long-tail sparsity, without incurring additional inference costs or serving latency.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ THREE INNOVATIONS ══════════════════════ -->
+<section class="section" id="innovations">
+  <div class="container">
+    <h2 class="section-title">🚀 Three Key Innovations</h2>
+
+    <!-- Innovation 1 -->
+    <div class="innovation-section">
+      <div class="innovation-header">
+        <div class="innovation-badge">01</div>
+        <div>
+          <h3>Thought-Augmented Query Understanding (TAQU)</h3>
+          <p>Leveraging LLMs to generate compact keyword-based CoTs for complex query understanding</p>
+        </div>
+      </div>
+      <div class="innovation-body two-cols">
+        <div class="innovation-text">
+          <p>
+            E-commerce search handles massive volumes of queries with complex intents: <strong>head queries</strong>
+            with highly-divergent and underspecified intent, and <strong>tail queries</strong> with diverse semantic constraints.
+            On Kuaishou Mall, these complex queries constitute ~one-third of total page views but only 8% of conversions.
+          </p>
+          <p>
+            We propose a <strong>three-step keyword-based CoT pipeline</strong>:
+          </p>
+          <ol class="steps-list">
+            <li>
+              <strong>Query Analysis</strong>: Intent understanding, category identification,
+              attribute recognition, and topic recommendation
+            </li>
+            <li>
+              <strong>Keyword Extraction</strong>: Extract high-density keywords with synonym merging,
+              redundant word removal, and popularity-ranked ordering
+            </li>
+            <li>
+              <strong>Preference Calibration</strong>: Leverage user profile and behavioral signals
+              to filter/augment keyword sets aligned with individual interests
+            </li>
+          </ol>
+          <div class="highlight-box">
+            <strong>Key Insight:</strong> Unlike full CoT reasoning that incurs prohibitive latency,
+            keyword-based CoTs are compact yet information-dense, enabling practical online deployment
+            via asynchronous generation and streaming training.
+          </div>
+        </div>
+        <div class="innovation-figure">
+          <div class="figure-inner">
+            <img src="static/images/cot.pdf.png" alt="Keyword-based CoT Pipeline" class="figure-img" />
+          </div>
+          <p class="figure-caption">
+            <strong>Figure 3:</strong> Three-step keyword-based CoT extraction pipeline for diverse
+            complex query types, along with the corresponding CoT tasks.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Innovation 2 -->
+    <div class="innovation-section">
+      <div class="innovation-header">
+        <div class="innovation-badge" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">02</div>
+        <div>
+          <h3>Reasoning-Internalized Self-Distillation</h3>
+          <p>Converting explicit CoT reasoning into fast, intuition-like inference without extra parameters</p>
+        </div>
+      </div>
+      <div class="innovation-body">
+        <div class="innovation-text">
+          <p>
+            We propose a <strong>self-distillation mechanism</strong> that transfers explicit reasoning capability
+            into model parameters, eliminating the need for additional trainable parameters, special tokens,
+            or extra inference cost.
+          </p>
+
+          <div class="method-diagram">
+            <div class="diagram-box teacher">
+              <div class="diagram-label">Teacher</div>
+              <div class="diagram-content">
+                Input: uid + query + SID_q + Seq + <strong class="highlight-kw">keywords</strong>
+              </div>
+              <div class="diagram-arrow">↓</div>
+              <div class="diagram-content small">Logits z<sup>(T)</sup></div>
+            </div>
+            <div class="diagram-middle">
+              <div class="kl-loss">KL Divergence</div>
+              <div class="shared-weights">⟵ Shared Weights θ ⟶</div>
+            </div>
+            <div class="diagram-box student">
+              <div class="diagram-label">Student</div>
+              <div class="diagram-content">
+                Input: uid + query + SID_q + Seq
+              </div>
+              <div class="diagram-arrow">↓</div>
+              <div class="diagram-content small">Logits z<sup>(S)</sup></div>
+            </div>
+          </div>
+
+          <div class="cards-grid two-cols" style="margin-top: 1.5rem;">
+            <div class="mini-card">
+              <h4>🔄 R-Drop Regularization</h4>
+              <p>Two forward passes with independent dropout masks, symmetric KL penalty for prediction consistency</p>
+            </div>
+            <div class="mini-card">
+              <h4>⚡ FGM Adversarial Training</h4>
+              <p>Fast Gradient Method on input embeddings for input robustness, smoothing loss landscape around ambiguous inputs</p>
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <code>
+              ℒ<sub>SDFT</sub> = ℒ<sub>CE</sub> + α<sub>KL</sub>·ℒ<sub>KL</sub> + α<sub>R</sub>·ℒ<sub>R-Drop</sub> + ℒ<sub>adv</sub>
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Innovation 3 -->
+    <div class="innovation-section">
+      <div class="innovation-header">
+        <div class="innovation-badge" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">03</div>
+        <div>
+          <h3>Behavior Feedback Preference Alignment (TPMA-GRPO)</h3>
+          <p>Token-position marginal advantage for precise hierarchical credit assignment</p>
+        </div>
+      </div>
+      <div class="innovation-body">
+        <div class="innovation-text">
+          <p>
+            OneSearch-V2 replaces the separately trained reward model with a <strong>direct behavior feedback
+            preference alignment system</strong>, using composite rewards from real user interactions.
+          </p>
+
+          <h4 style="margin: 1.5rem 0 0.8rem; color: var(--primary);">Composite Reward Design</h4>
+          <div class="cards-grid three-cols">
+            <div class="reward-card">
+              <div class="reward-icon">🎯</div>
+              <div class="reward-name">Relevance Reward (R<sub>Rel</sub>)</div>
+              <div class="reward-desc">4-tier quality classification: Excellent / Related / Mismatch / Irrelevant</div>
+            </div>
+            <div class="reward-card">
+              <div class="reward-icon">📊</div>
+              <div class="reward-name">Conversion Reward (R<sub>CTR</sub>)</div>
+              <div class="reward-desc">Calibrated posterior CTR signal, clipped to prevent high-CTR dominance</div>
+            </div>
+            <div class="reward-card">
+              <div class="reward-icon">🛒</div>
+              <div class="reward-name">Click & Order (R<sub>C&amp;O</sub>)</div>
+              <div class="reward-desc">Direct reward for user-clicked and purchased items with hierarchical values</div>
+            </div>
+          </div>
+
+          <h4 style="margin: 1.5rem 0 0.8rem; color: var(--primary);">Token-Position Marginal Advantage (TPMA)</h4>
+          <p>
+            SID generation follows a strict <strong>hierarchical causal structure</strong> (coarse→fine). Standard GRPO assigns
+            uniform advantage to every token, ignoring this structure. TPMA decomposes the sequence-level reward
+            into position-level marginal contributions:
+          </p>
+          <div class="tpma-flow">
+            <div class="tpma-step">
+              <div class="tpma-icon">1</div>
+              <div>Prefix Reward per position</div>
+            </div>
+            <div class="tpma-arrow">→</div>
+            <div class="tpma-step">
+              <div class="tpma-icon">2</div>
+              <div>Position-level Advantage</div>
+            </div>
+            <div class="tpma-arrow">→</div>
+            <div class="tpma-step">
+              <div class="tpma-icon">3</div>
+              <div>Prefix Gate (blocks bad prefix gradients)</div>
+            </div>
+            <div class="tpma-arrow">→</div>
+            <div class="tpma-step">
+              <div class="tpma-icon">4</div>
+              <div>Combined Final Advantage</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════ EXPERIMENTS ══════════════════════ -->
+<section class="section section-alt" id="experiments">
+  <div class="container">
+    <h2 class="section-title">📊 Experimental Results</h2>
+
+    <!-- Online A/B Testing -->
+    <h3 class="subsection-title">Online A/B Testing on Kuaishou Mall</h3>
+    <p class="section-subtitle">
+      All models adopt the same deployment paradigm with no additional inference cost
+    </p>
+
+    <div class="table-wrapper">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Item CTR</th>
+            <th>PV CTR</th>
+            <th>PV CVR</th>
+            <th>Buyer Volume</th>
+            <th>Order Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="method-baseline">OneSearch-V1 (Baseline)</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><span class="method-name">OneSearch-V2<sub>RAG</sub></span></td>
+            <td><span class="gain positive">+0.52%</span></td>
+            <td><span class="gain positive">+0.77%</span></td>
+            <td><span class="gain positive">+0.63%</span></td>
+            <td><span class="gain positive">+1.04%</span></td>
+            <td><span class="gain positive">+1.07%</span></td>
+          </tr>
+          <tr>
+            <td><span class="method-name">OneSearch-V2<sub>Reason</sub></span></td>
+            <td><span class="gain positive">+2.59%</span></td>
+            <td><span class="gain positive">+1.42%</span></td>
+            <td><span class="gain positive">+2.21%</span></td>
+            <td><span class="gain positive">+1.50%</span></td>
+            <td><span class="gain positive">+1.57%</span></td>
+          </tr>
+          <tr class="best-row">
+            <td><span class="method-best">OneSearch-V2 (Full)</span></td>
+            <td><span class="gain best-gain">+3.98%</span></td>
+            <td><span class="gain best-gain">+1.17%</span></td>
+            <td><span class="gain best-gain">+2.90%</span></td>
+            <td><span class="gain best-gain">+2.07%</span></td>
+            <td><span class="gain best-gain">+2.11%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-caption">
+        <em>Table: Online A/B Testing Results. Bold values indicate statistical significance (P-value &lt; 0.05).</em>
+      </p>
+    </div>
+
+    <!-- Offline Performance -->
+    <h3 class="subsection-title" style="margin-top: 3rem;">Offline Performance (Incremental Ablation)</h3>
+    <div class="table-wrapper">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th rowspan="2">Method</th>
+            <th colspan="2">Order (7229)</th>
+            <th colspan="2">Click (30k)</th>
+          </tr>
+          <tr>
+            <th>HR@10</th>
+            <th>MRR@10</th>
+            <th>HR@10</th>
+            <th>MRR@10</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OneSearch (V1 baseline)</td>
+            <td>0.2046</td>
+            <td>0.0985</td>
+            <td>0.2231</td>
+            <td>0.0728</td>
+          </tr>
+          <tr>
+            <td>+ CoT Tasks</td>
+            <td>0.2094</td>
+            <td>0.1008</td>
+            <td>0.2266</td>
+            <td>0.0731</td>
+          </tr>
+          <tr>
+            <td>+ Self-Distillation</td>
+            <td>0.2163</td>
+            <td>0.1017</td>
+            <td>0.2398</td>
+            <td>0.0757</td>
+          </tr>
+          <tr>
+            <td>+ R-Drop</td>
+            <td>0.2168</td>
+            <td>0.1045</td>
+            <td>0.2398</td>
+            <td>0.0760</td>
+          </tr>
+          <tr>
+            <td>+ FGM</td>
+            <td>0.2180</td>
+            <td>0.1047</td>
+            <td>0.2422</td>
+            <td>0.0766</td>
+          </tr>
+          <tr>
+            <td>+ Focal Loss</td>
+            <td>0.2214</td>
+            <td>0.1048</td>
+            <td>0.2471</td>
+            <td>0.0788</td>
+          </tr>
+          <tr>
+            <td>+ GRPO</td>
+            <td>0.2248</td>
+            <td>0.1106</td>
+            <td>0.2481</td>
+            <td>0.0798</td>
+          </tr>
+          <tr>
+            <td>+ TPMA</td>
+            <td><u>0.2265</u></td>
+            <td><u>0.1136</u></td>
+            <td>0.2498</td>
+            <td><u>0.0815</u></td>
+          </tr>
+          <tr class="best-row">
+            <td><strong>OneSearch-V2 (Full)</strong></td>
+            <td><strong>0.2314</strong></td>
+            <td><strong>0.1151</strong></td>
+            <td><strong>0.2568</strong></td>
+            <td><strong>0.0833</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-caption">
+        <em>Table: Incremental offline performance. Best results in <strong>bold</strong>, sub-optimal <u>underlined</u>.</em>
+      </p>
+    </div>
+
+    <!-- CTR Gains by Industry -->
+    <h3 class="subsection-title" style="margin-top: 3rem;">CTR Gains by Industry</h3>
+    <div class="figure-card">
+      <div class="figure-inner">
+        <img src="static/images/industry_ctr_gains.png" alt="Industry CTR Gains" class="figure-img" />
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 4:</strong> The online CTR relative gains for top/middle/tail 10 industries respectively.
+        Almost all industries experienced increases, with an average gain of 3.98%.
+        Improvements are more pronounced in categories with extensive head but ambiguous queries,
+        such as Clothing, Shoes, Cosmetics, and Hardware &amp; Electrical.
+      </p>
+    </div>
+
+    <!-- CTR by User/Query/Item -->
+    <h3 class="subsection-title" style="margin-top: 3rem;">CTR Gains Across User / Query / Item Dimensions</h3>
+    <div class="figure-card">
+      <div class="figure-inner">
+        <img src="static/images/ctr_freq.png" alt="CTR Relative Gains" class="figure-img" style="max-width:700px;" />
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 5:</strong> CTR relative gains for various user/query/items segments.
+        OneSearch-V2 demonstrates consistent improvements across all user segments.
+        Long-tail queries achieve the most pronounced improvement of <strong>5.37%</strong>,
+        and cold items benefit most significantly with a remarkable <strong>6.16%</strong> CTR improvement.
+      </p>
+    </div>
+
+    <!-- SID Rate -->
+    <h3 class="subsection-title" style="margin-top: 3rem;">Valid SID Rate Analysis</h3>
+    <div class="figure-card">
+      <div class="figure-inner">
+        <img src="static/images/sid_rate.png" alt="SID Rate" class="figure-img" style="max-width:600px;" />
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 6:</strong> The SID rate of the proposed innovations with OneSearch on the industry dataset.
+        The final OneSearch-V2 achieves optimal results (99.00% for click, and 99.20% for order),
+        maintaining semantic coherence while generating diverse and relevant item candidates.
+      </p>
+    </div>
+
+    <!-- Manual Evaluation -->
+    <h3 class="subsection-title" style="margin-top: 3rem;">Manual Evaluation of Search Experience</h3>
+    <div class="table-wrapper">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Page Good Rate</th>
+            <th>Item Quality</th>
+            <th>Query-Item Relevance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OneSearch-V2<sub>Reason</sub></td>
+            <td><span class="gain positive">+1.12%</span></td>
+            <td><span class="gain positive">+0.28%</span></td>
+            <td><span class="gain positive">+1.01%</span></td>
+          </tr>
+          <tr class="best-row">
+            <td><strong>OneSearch-V2 (Full)</strong></td>
+            <td><span class="gain best-gain">+1.37%</span></td>
+            <td><span class="gain best-gain">+0.55%</span></td>
+            <td><span class="gain best-gain">+1.65%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-caption">
+        <em>Table: Manual evaluation results for online search experience quality (200 queries, 3200 query-item pairs).</em>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ KEY FINDINGS ══════════════════════ -->
+<section class="section" id="findings">
+  <div class="container">
+    <h2 class="section-title">💡 Key Findings</h2>
+    <div class="cards-grid two-cols">
+      <div class="finding-card">
+        <div class="finding-icon">🏆</div>
+        <h3>Self-Distillation Outperforms Latent Tokens</h3>
+        <p>
+          Self-Distill (S) consistently outperforms Base (T) across all metrics, despite never observing
+          keywords at inference time. This confirms that reasoning capability is encoded into model weights —
+          not relying on keyword inputs.
+        </p>
+      </div>
+      <div class="finding-card">
+        <div class="finding-icon">📦</div>
+        <h3>Cold Items Benefit Most</h3>
+        <p>
+          Cold items (published within 7 days with no interactions) benefit most significantly from OneSearch-V2,
+          achieving a remarkable <strong>6.16% CTR improvement</strong>. This is critical for platform ecosystem health
+          and merchant satisfaction.
+        </p>
+      </div>
+      <div class="finding-card">
+        <div class="finding-icon">🔍</div>
+        <h3>Long-tail Queries Improved Most</h3>
+        <p>
+          Long-tail queries achieve the most pronounced improvement of <strong>5.37%</strong> CTR gain,
+          followed by high-frequency (5.01%) and middle-frequency (4.88%) queries. CoT-enhanced semantic
+          alignment excels at handling ambiguous or rare queries.
+        </p>
+      </div>
+      <div class="finding-card">
+        <div class="finding-icon">🚫</div>
+        <h3>No Extra Inference Cost</h3>
+        <p>
+          OneSearch-V2 achieves all improvements <strong>without additional inference cost or serving latency</strong>.
+          The keyword-based CoT generation is performed asynchronously, and reasoning is internalized into model weights.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ BIBTEX ══════════════════════ -->
+<section class="section section-alt" id="bibtex">
+  <div class="container">
+    <h2 class="section-title">📝 BibTeX</h2>
+    <p class="section-subtitle">If you find this work useful for your research, please cite our paper:</p>
+    <div class="bibtex-card">
+      <div class="bibtex-header">
+        <span class="bibtex-lang">BibTeX</span>
+        <button class="copy-btn" id="copyBibtex" onclick="copyBibtex()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy
+        </button>
+      </div>
+      <pre class="bibtex-code" id="bibtexContent">@misc{chen2026onesearchv2latentreasoningenhanced,
+      title={OneSearch-V2: The Latent Reasoning Enhanced Self-distillation Generative Search Framework}, 
+      author={Ben Chen and Siyuan Wang and Yufei Ma and Zihan Liang and Xuxin Zhang and Yue Lv and Ying Yang and Huangyu Dai and Lingtao Mao and Tong Zhao and Zhipeng Qian and Xinyu Sun and Zhixin Zhai and Yang Zhao and Bochao Liu and Jingshan Lv and Xiao Liang and Hui Kong and Jing Chen and Han Li and Chenyi Lei and Wenwu Ou and Kun Gai},
+      year={2026},
+      eprint={2603.24422},
+      archivePrefix={arXiv},
+      primaryClass={cs.IR},
+      url={https://arxiv.org/abs/2603.24422}, 
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <span class="logo-icon">🔍</span>
+        <span class="logo-text">OneSearch-V2</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://arxiv.org/abs/2603.24422" target="_blank">Paper</a>
+        <a href="https://github.com/benchen4395/onesearch-family" target="_blank">GitHub</a>
+        <a href="https://benchen4395.github.io/" target="_blank">Author Homepage</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Kuaishou Technology. This website is built for academic sharing purposes.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>
